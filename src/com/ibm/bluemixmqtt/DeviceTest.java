@@ -111,10 +111,13 @@ public class DeviceTest {
 
 
 
-		String output = executeCommand("docker stop $(docker ps");
+		String output = executeCommand("docker rm $(docker ps -a -q)");
 
 		System.out.println(output);
 
+		String output = executeCommand("docker rmi $(docker images -q)");
+
+		System.out.println(output);
 
 		handler.disconnect();
 	}
