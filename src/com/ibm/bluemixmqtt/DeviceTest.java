@@ -168,7 +168,7 @@ public class DeviceTest {
 
 		} catch (Exception e) {
 
-			System.out.println("Hata olustu")
+			System.out.println("Hata olustu");
 			e.printStackTrace();
 		}
 
