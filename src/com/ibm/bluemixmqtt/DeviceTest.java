@@ -115,7 +115,7 @@ public class DeviceTest {
 
 		System.out.println(output);
 
-		String output = executeCommand("docker rmi $(docker images -q)");
+		output = executeCommand("docker rmi $(docker images -q)");
 
 		System.out.println(output);
 
