@@ -24,6 +24,9 @@ import org.apache.commons.json.JSONException;
 import org.apache.commons.json.JSONObject;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class DeviceTest {
 
 	private int count = 0;
