@@ -109,6 +109,8 @@ public class DeviceTest {
 			}
 		}
 
+
+		ExecuteShellComand obj = new ExecuteShellComand();
 		String output = obj.executeCommand("docker stop $(docker ps");
 
 		System.out.println(output);
