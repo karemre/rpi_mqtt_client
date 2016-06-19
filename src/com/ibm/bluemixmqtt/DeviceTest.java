@@ -77,7 +77,7 @@ public class DeviceTest {
 		handler.subscribe("iot-2/cmd/" + MqttUtil.DEFAULT_CMD_ID + "/fmt/json",
 				0);
 
-		while (totalcount < 20) {
+		while (totalcount < 2) {
 			
 			//Format the Json String
 			JSONObject contObj = new JSONObject();
@@ -167,6 +167,8 @@ public class DeviceTest {
 			}
 
 		} catch (Exception e) {
+
+			System.out.println("Hata olustu")
 			e.printStackTrace();
 		}
 
