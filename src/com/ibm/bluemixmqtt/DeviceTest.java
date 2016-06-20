@@ -79,6 +79,8 @@ public class DeviceTest {
 
 		while (totalcount < 2) {
 			
+			System.out.println("asdfjds" + totalcount);
+
 			//Format the Json String
 			JSONObject contObj = new JSONObject();
 			JSONObject jsonObj = new JSONObject();
