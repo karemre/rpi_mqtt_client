@@ -77,37 +77,18 @@ public class DeviceTest {
 		handler.subscribe("iot-2/cmd/" + MqttUtil.DEFAULT_CMD_ID + "/fmt/json",
 				0);
 
-
-		JSONObject jsonObj = new JSONObject();
-
-
-                try {
-     	        	jsonObj.put("message", "register");
-                } catch (JSONException e1) {
-                        e1.printStackTrace();
-               	}
-
-                //Publish device events to the app
-                //iot-2/evt/<event-id>/fmt/<format> 
-                handler.publish("iot-2/evt/" + MqttUtil.DEFAULT_EVENT_ID
-                                        + "/fmt/json", jsonObj.toString(), false, 0);
-
-
-		while (true) {
-			/*
+		while (totalcount < 2) {
+			
 			System.out.println("asdfjds" + totalcount);
 
 			//Format the Json String
 			JSONObject contObj = new JSONObject();
 			JSONObject jsonObj = new JSONObject();
-
-
 			try {
 				contObj.put("count", count);
 				contObj.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 						.format(new Date()));
 				jsonObj.put("d", contObj);
-				jsonObj.put("memory", runtime.totalMemory());
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
@@ -128,11 +109,23 @@ public class DeviceTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			*/
 		}
 
-		//handler.disconnect();
+                System.out.println("geldim");
+
+		String output = executeCommand("docker stop $(docker ps -a -q)");
+
+		System.out.println(output);
+
+		output = executeCommand("docker rm $(docker ps -a -q)");
+
+		System.out.println(output);
+
+		output = executeCommand("docker rmi $(docker images -q)");
+
+		System.out.println(output);
+
+		handler.disconnect();
 	}
 
 	/**
@@ -144,8 +137,6 @@ public class DeviceTest {
 		@Override
 		public void messageArrived(String topic, MqttMessage mqttMessage)
 				throws Exception {
-			
-			System.out.println(topic);
 			super.messageArrived(topic, mqttMessage);
 			
 			//Check whether the event is a command event from app
@@ -159,41 +150,37 @@ public class DeviceTest {
 					int resetcount = jsonObject.getInt("count");
 					count = resetcount;
 					System.out.println("Count is reset to " + resetcount);
-				}else
-			
-				if (cmd != null && cmd.equals("SystemInfo")){
-				
-					JSONObject jsonObj = new JSONObject();
-					
-					//Getting the runtime reference from system
-               				Runtime runtime = Runtime.getRuntime();
-
-                       			try {
-						jsonObj.put("message", "SystemInfo");
-                               			jsonObj.put("memory", runtime.totalMemory());
-                       			} catch (JSONException e1) {
-                               			 e1.printStackTrace();
-                        		}
-
-
-		                        //Publish device events to the app
-                		        //iot-2/evt/<event-id>/fmt/<format> 
-                       			 handler.publish("iot-2/evt/" + MqttUtil.DEFAULT_EVENT_ID
-                                       			 + "/fmt/json", jsonObj.toString(), false, 0);
-				       	
-				
-				}else if(cmd != null && cmd.equals("killFirst")){
-					Process p; 
-               				 try{
-
-                       				 p = Runtime.getRuntime().exec("sh docker.sh");
-                       				 int value =  p.waitFor();
-               				 }catch(Exception e){
-                       				 e.printStackTrace();
-                			 }
 				}
 			}
 		}
+	}
+
+
+	private String executeCommand(String command) {
+
+		StringBuffer output = new StringBuffer();
+
+		System.out.println("dlfkjalkdf = " + command);
+
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(command);			p.waitFor();
+			BufferedReader reader = 
+                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                        String line = "";			
+			while ((line = reader.readLine())!= null) {
+				output.append(line + "\n");
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Hata olustu");
+			e.printStackTrace();
+		}
+
+		return output.toString();
+
 	}
 
 }
