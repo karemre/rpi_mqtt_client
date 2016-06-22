@@ -27,12 +27,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
+
 public class DeviceTest {
 
 	private int count = 0;
 	private int totalcount = 0;
 	private MqttHandler handler = null;
 
+	private  boolean pub = false;
+	
 	/**
 	 * @param args
 	 */
@@ -94,9 +100,36 @@ public class DeviceTest {
 
 
 		while (true) {
-			/*
+			
 			System.out.println("asdfjds" + totalcount);
 
+
+			if(pub){
+				System.out.println("sdkfhsadjhfasdkfaskjd");
+
+				jsonObj = new JSONObject();
+                                        
+                                 //Getting the runtime reference from system
+                                 Runtime runtime = Runtime.getRuntime();
+			  	 OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+                                 
+				try {
+                                 	jsonObj.put("message", "SystemInfo");
+                                        jsonObj.put("memory", operatingSystemMXBean.getFreePhysicalMemorySize());
+                                 } catch (JSONException e1) {
+                                        e1.printStackTrace();
+                                 }
+
+
+                                 //Publish device events to the app
+                                 //iot-2/evt/<event-id>/fmt/<format> 
+                                 handler.publish("iot-2/evt/" + MqttUtil.DEFAULT_EVENT_ID
+                                                + "/fmt/json", jsonObj.toString(), false, 0);
+				
+				pub = false;
+			}
+
+			/*
 			//Format the Json String
 			JSONObject contObj = new JSONObject();
 			JSONObject jsonObj = new JSONObject();
@@ -119,20 +152,21 @@ public class DeviceTest {
 			handler.publish("iot-2/evt/" + MqttUtil.DEFAULT_EVENT_ID
 					+ "/fmt/json", jsonObj.toString(), false, 0);
 
-			count++;
-			totalcount++;
+			*/
+			
 
 			try {
-				Thread.sleep(15 * 1000);
+				Thread.sleep(5 * 1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 
-			*/
+			
 		}
 
-		//handler.disconnect();
+//		handler.disconnect();
 	}
 
 	/**
@@ -162,7 +196,9 @@ public class DeviceTest {
 				}else
 			
 				if (cmd != null && cmd.equals("SystemInfo")){
-				
+					
+					pub = true;
+					/*
 					JSONObject jsonObj = new JSONObject();
 					
 					//Getting the runtime reference from system
@@ -180,7 +216,7 @@ public class DeviceTest {
                 		        //iot-2/evt/<event-id>/fmt/<format> 
                        			 handler.publish("iot-2/evt/" + MqttUtil.DEFAULT_EVENT_ID
                                        			 + "/fmt/json", jsonObj.toString(), false, 0);
-				       	
+				       	*/
 				
 				}else if(cmd != null && cmd.equals("killFirst")){
 					Process p; 
