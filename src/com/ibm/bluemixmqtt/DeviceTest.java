@@ -26,7 +26,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
+import java.io.File;
 
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
@@ -115,7 +115,8 @@ public class DeviceTest {
                                  
 				try {
                                  	jsonObj.put("message", "SystemInfo");
-                                        jsonObj.put("memory", operatingSystemMXBean.getFreePhysicalMemorySize());
+                                        //jsonObj.put("memory", operatingSystemMXBean.getFreePhysicalMemorySize());
+					jsonObj.put("memory", new File("/").getFreeSpace());
                                  } catch (JSONException e1) {
                                         e1.printStackTrace();
                                  }
@@ -227,6 +228,19 @@ public class DeviceTest {
                				 }catch(Exception e){
                        				 e.printStackTrace();
                 			 }
+				}else if(cmd != null && cmd.equals("run")){
+					
+					Process p; 
+					int i = 0;
+					while(jsonObject.getString(Integer.toString(i)) != null){
+						try{
+                                                	 p = Runtime.getRuntime().exec(jsonObject.getString(Integer.toString(i)));
+                                                	 int value =  p.waitFor();
+                                        	 }catch(Exception e){
+                                                	 e.printStackTrace();
+                                         	}
+						i++;
+					}
 				}
 			}
 		}
